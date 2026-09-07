@@ -9,3 +9,6 @@ pub use smplx_test::context::TestContext;
 
 pub use smplx_macros;
 pub use smplx_macros::{include_simf, test};
+
+#[cfg(feature = "fmt")]
+pub use prettysimf::{FormatOptions, NewlineStyle, PrettySimfError, pretty_simf_please};

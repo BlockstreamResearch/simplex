@@ -11,6 +11,9 @@ documentation = "https://docs.rs/smplx-std"
 keywords = ["liquid", "elements", "smart-contracts", "simplicity", "framework"]
 categories = ["cryptography::cryptocurrencies"]
 
+[features]
+fmt = ["dep:prettysimf"]
+
 [lib]
 name = "simplex"
 
@@ -25,7 +28,10 @@ smplx-sdk = { workspace = true, features = ["provider"] }
 serde = { workspace = true }
 simplicityhl = { workspace = true, features = ["serde"] }
 
+prettysimf = { version = "0.0.1", optional = true }
+
 either = { version = "1.15.0", features = ["serde"] }
 
 [dev-dependencies]
 trybuild = { version = "1.0.115" }
+
