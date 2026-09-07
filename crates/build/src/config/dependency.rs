@@ -158,7 +158,7 @@ impl RawDependency {
                     (None, None, None) => None,
                     (Some(v), None, None) => Some(GitRef::Rev(v)),
                     (None, Some(t), None) => Some(GitRef::Tag(t)),
-                    (None, None, Some(t)) => Some(GitRef::Branch(t)),
+                    (None, None, Some(b)) => Some(GitRef::Branch(b)),
                     _ => return Err(DependencyValidationError::ConflictingGitRef(name.into())),
                 };
 
