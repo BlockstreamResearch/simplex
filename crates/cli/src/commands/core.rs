@@ -23,13 +23,17 @@ pub enum Command {
     /// If `deps` is empty, install everything from `Simplex.toml`.
     Install {
         /// Dependencies to install, as `<source>` or `<alias>=<source>`.
+        /// The bare name `std` pins the latest `SimplicityHL` standard library release.
         #[arg(value_name = "DEP")]
         deps: Vec<String>,
     },
     /// Generates the simplicity contracts artifacts
     Build,
     /// Cleans Simplex artifacts in the current directory
-    Clean,
+    Clean {
+        #[command(flatten)]
+        flags: CleanFlags,
+    },
 }
 
 #[allow(clippy::struct_excessive_bools)]
@@ -67,4 +71,12 @@ pub struct TestFlags {
     /// Run non-simplex tests (may be used for running unit tests)
     #[arg(long = "no-simplex")]
     pub no_simplex: bool,
+}
+
+#[allow(clippy::struct_excessive_bools)]
+#[derive(Debug, Args, Clone)]
+pub struct CleanFlags {
+    /// Remove all files created by Simplex, including installed dependencies
+    #[arg(long = "all")]
+    pub remove_all: bool,
 }

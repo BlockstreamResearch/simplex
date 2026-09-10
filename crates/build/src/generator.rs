@@ -134,7 +134,7 @@ impl ArtifactsGenerator {
             fs::create_dir_all(parent)?;
         }
 
-        let source_entry = Self::process_content(source, validated_deps)?;
+        let source_entry = Self::process_content(source, base_dir, validated_deps)?;
         fs::write(&mirrored_path, &source_entry.content)?;
 
         let relative_path_str = relative_path.display().to_string();
@@ -152,15 +152,15 @@ impl ArtifactsGenerator {
     }
 
     /// Reads and processes the content of a `.simf` file.
-    fn process_content(source: &Path, validated_deps: &ValidatedDeps) -> Result<SourceEntry, BuildError> {
-        let parent_dir = source.parent().ok_or_else(|| {
-            BuildError::GenerationFailed(format!("Path '{}' has no parent directory", source.display()))
-        })?;
-
+    fn process_content(
+        source: &Path,
+        project_root: &Path,
+        validated_deps: &ValidatedDeps,
+    ) -> Result<SourceEntry, BuildError> {
         let canon_source = CanonPath::canonicalize(source).map_err(BuildError::PathCanonicalization)?;
         let content = fs::read_to_string(source)?;
         let canon_source_file = CanonSourceFile::new(canon_source, Arc::from(content));
-        let dependency_map = Self::build_dependency_map(validated_deps, parent_dir)?;
+        let dependency_map = Self::build_dependency_map(validated_deps, project_root)?;
 
         let template = TemplateProgram::new_with_dep(
             canon_source_file.clone(),
@@ -170,7 +170,7 @@ impl ArtifactsGenerator {
         )
         .map_err(|diags| BuildError::DryRun(diags.to_string()))?;
         let flattened = TemplateProgram::flatten(canon_source_file, &dependency_map, &UnstableFeatures::all())
-            .map_err(BuildError::Flattening)?;
+            .map_err(|diags| BuildError::Flattening(diags.to_string()))?;
 
         Ok(SourceEntry {
             cmr: ContractId::from_template(&template)?,
