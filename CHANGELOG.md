@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.0.11]
+
+- Bumped `simplicityhl` dependency to `0.7.2`.
+- Added `simplex clean --all` flag to also delete installed dependencies.
+- Added an ability to specify a `branch` in the dependencies installation section.
+- Added `simplex install std` alias to install the latest `simplicityhl-std` version.
+- Added custom Elements network resolution to support networks with dynamic genesis hashes and policy assets.
+- Added an ability to sign and inject custom `sighash_all` tags to the `Signer`. Use via `RequiredSignature::WitnessWithMessage`.
+- Fixed artifacts generation for dependencies that are deeper than one directory in.
+
 ## [0.0.10]
 
 - Added `SECURITY.md` for security reporting guidelines.
